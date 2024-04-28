@@ -23,6 +23,7 @@ function App() {
   const [password2, setPassword2] = useState("");
   const [password3, setPassword3] = useState("");
   const [password4, setPassword4] = useState("");
+  const [passwordCriterias, setPasswordCriterias] = useState(false);
 
   function encrypt(phrase, password1, password2) {
     const encryptedMessage = CryptoJS.AES.encrypt(phrase, password1).toString();
@@ -51,6 +52,27 @@ function App() {
     setWords(Array.from({ length: seedSize }, () => ""))
     setPhrase("")
   }, [seedSize, encrypting])
+
+  useEffect(() => {
+
+    if (Boolean(password === password2 && password.length > 0 &&
+      password.length > 7 &&
+      password.match(/\d/) &&
+      password.match(/[A-Z]/) &&
+      password.match(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/) &&
+      password3 === password4 && password3.length > 0 &&
+      password3.length > 7 &&
+      password3.match(/\d/) &&
+      password3.match(/[A-Z]/) &&
+      password3.match(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/)) &&
+      password != password3) {
+      setPasswordCriterias(true);
+    }
+    else {
+      setPasswordCriterias(false);
+    }
+
+  }, [password, password2, password3, password4])
 
   return (
     <>
@@ -295,20 +317,27 @@ function App() {
             <span className={(password3.match(/\d/) ? "text-greenright" : "text-redwarning")}>Password must have at least one number.</span>
             <span className={(password3.match(/[A-Z]/) ? "text-greenright" : "text-redwarning")}>Password must have at least one capital letter.</span>
             <span className={(password3.match(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/) ? "text-greenright" : "text-redwarning")}>Password must have at least one special character.</span>
+            <span className={(password != password3 ? "text-greenright" : "text-redwarning")}>Passwords must be different.</span>
           </div>
           <div className='mt-10'>
             {encrypting ?
-              <Button onClick={() => {
+              <Button 
+              onClick={() => {
                 setEncryptedText(encrypt(wordsToString(), password, password3))
-                setOpenModal(true)
-              }} variant="contained">
+                setOpenModal(true)                
+              }} 
+              variant="contained"
+              disabled={!passwordCriterias}>
                 Encrypt
               </Button>
               :
-              <Button onClick={() => {
+              <Button 
+              onClick={() => {
                 setOpenModal(true)
                 setDecryptedText(decrypt(phrase, password, password3))
-              }} variant="contained">
+              }} 
+              variant="contained"
+              disabled={!passwordCriterias}>
                 Decrypt
               </Button>
             }
