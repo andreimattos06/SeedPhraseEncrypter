@@ -100,19 +100,32 @@ function App() {
         <div className='bg-white flex flex-col gap-5 w-5/6 sm:w-4/6 md:w-7/12 lg:w-2/4 xl:w-5/12 2xl:w-4/12 items-center justify-center border-[1px] my-16 border-primary py-8 px-5 rounded-3xl'>
           <div className='flex items-center justify-center text-primary font-bold gap-1'>
             <span>Seed Phrase Encrypter</span>
-            <Tooltip className='animate-bounce' placement="left-end" title={
+            <Tooltip className='animate-bounce' placement="left-end" arrow title={
               <div className='flex flex-col gap-3 px-2 py-2'>
                 <div>
-                  <span>How it works:</span>
-                  <ul class="list-disc list-inside">
-                    <li>a</li>
+                  <span className='font-bold text-base'>How it works:</span>
+                  <ul class="list-disc list-inside text-justify">
+                    <li>ALL transactions are running locally, which means that ALL information needed to encrypt or decrypt isn't being sent to any server or external resources.</li>
+                    <li>After the page is fully loaded, you can even run it disconnected from the internet to ensure that the data isn't being sent anywhere.</li>
+                    <li>It's open source. You can view the code or even make a copy to ensure you can decrypt anytime you want.</li>
+                    <li>It uses the AES algorithm to encrypt the data, which means it's very secure and extremely difficult to break. It's almost immune to conventional attacks.</li>
                   </ul>
                 </div>
                 <div>
-                  <span>How it works:</span>
-                  <ul class="list-disc list-inside">
-                    <li>a</li>
-                  </ul>
+                  <span className='font-bold text-base'>How to use:</span>
+                  <ol class="list-decimal list-inside">
+                    <li>Select the type of transaction you want: encrypt or decrypt.</li>
+                    <li>Fill in the information.</li>
+                    <li>Fill in the password fields, paying attention to the prerequisites. It requires two passwords for security reasons.</li>
+                  </ol>
+                </div>
+                <div>
+                  <span className='font-bold text-base'>Security Hints:</span>
+                  <ol class="list-disc list-inside">
+                    <li>Open the page in incognito mode to ensure that unauthorized software or plugins do not access the inputted data.</li>
+                    <li>Make sure your computer is free of viruses and/or malicious software.</li>
+                    <li>The longer the password, number of numbers and special characters, the more secure the password will be.</li>
+                  </ol>
                 </div>
               </div>
             }>
