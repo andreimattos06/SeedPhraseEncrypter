@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react'
 import CryptoJS from 'crypto-js';
 import Button from '@mui/material/Button';
-import { Dialog, DialogTitle, Divider, FormControl, FormControlLabel, IconButton, Input, InputAdornment, InputLabel, MenuItem, Radio, RadioGroup, Select, Snackbar, TextField } from '@mui/material';
+import { Dialog, Divider, FormControl, FormControlLabel, IconButton, Input, InputAdornment, InputLabel, MenuItem, Radio, RadioGroup, Select, Snackbar, TextField, Tooltip } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 function App() {
   const [seedSize, setSeedSize] = useState(12);
   const [openModal, setOpenModal] = useState(false);
   const [openCopySnack, setOpenCopySnack] = useState(false);
-  const [transaction, setTransaction] = useState("encrypt");
+  const [encrypting, setEncrypting] = useState(true);
   const [words, setWords] = useState(Array.from({ length: 12 }, () => ""));
+  const [phrase, setPhrase] = useState("");
   const [encryptedText, setEncryptedText] = useState("");
+  const [decryptedText, setDecryptedText] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
   const [showPassword3, setShowPassword3] = useState(false);
@@ -38,7 +41,7 @@ function App() {
   function wordsToString() {
     let text = "";
     words.map(e => {
-      text += "," + e;
+      text += ", " + e;
     })
     text = text.substring(1)
     return text;
@@ -46,78 +49,138 @@ function App() {
 
   useEffect(() => {
     setWords(Array.from({ length: seedSize }, () => ""))
-  }, [seedSize, transaction])
+    setPhrase("")
+  }, [seedSize, encrypting])
 
   return (
     <>
-      
-      <Dialog open={openModal}>
+      <Dialog onClose={() => { setOpenModal(false) }} open={openModal}>
         <div className='flex flex-col py-5 px-5 gap-6 border-2 border-primary rounded-md bg-white'>
           <div className='w-full flex justify-center items-center'>
             <span className='text-primary font-bold'>
-              Encrypted Text
+              {encrypting ? "Encrypted Text" : "Decrypted Phrase"}
             </span>
           </div>
-          <div className='flex items-center justify-center border-2 border-primary rounded-md'>
-            <p className='break-all px-2 py-1 border-r-2 border-primary' id="encryptedtext">{encryptedText}</p>
-            <button className='text-primary rounded-lg m-2 p-1 hover:bg-primary hover:text-white' onClick={() => { navigator.clipboard.writeText(encryptedText); setOpenCopySnack(true) }}><ContentCopyIcon />
-            </button>
+          {encrypting ?
+            <div className='flex items-center justify-center border-2 border-primary rounded-md'>
+              <p className='break-all px-2 py-1 border-r-2 border-primary' id="encryptedtext">{encryptedText}</p>
+              <button className='text-primary rounded-lg m-2 p-1 hover:bg-primary hover:text-white' onClick={() => { navigator.clipboard.writeText(encryptedText); setOpenCopySnack(true) }}><ContentCopyIcon />
+              </button>
+            </div>
+            :
+            <div className='flex items-center justify-center border-2 border-primary rounded-md'>
+              <p className='px-2 py-1 border-primary' id="encryptedtext">{decryptedText}.</p>
+            </div>
+          }
+          <div className='flex flex-col'>
+            <span className='text-primary font-bold'>Notes:</span>
+
+            {encrypting ?
+              <ul class="list-disc list-inside marker:text-primary">
+                <li>a</li>
+                <li>a</li>
+              </ul>
+              :
+              <></>
+            }
+
+
           </div>
         </div>
-      </Dialog>
+      </Dialog >
 
       <Snackbar
         open={openCopySnack}
         autoHideDuration={3000}
         message="Text copied to clipboard!"
-        onClose={() => {setOpenCopySnack(false)}}
+        onClose={() => { setOpenCopySnack(false) }}
       />
 
       <FormControl className='w-full flex items-center'>
-        <div className='flex flex-col gap-5 w-5/6 sm:w-4/6 md:w-7/12 lg:w-2/4 xl:w-5/12 2xl:w-4/12 items-center justify-center border-[1px] mt-16 border-primary py-8 px-5 rounded-3xl'>
-          <div className='flex items-center justify-center text-primary font-bold'>
+        <div className='bg-white flex flex-col gap-5 w-5/6 sm:w-4/6 md:w-7/12 lg:w-2/4 xl:w-5/12 2xl:w-4/12 items-center justify-center border-[1px] my-16 border-primary py-8 px-5 rounded-3xl'>
+          <div className='flex items-center justify-center text-primary font-bold gap-1'>
             <span>Seed Phrase Encrypter</span>
+            <Tooltip className='animate-bounce' placement="left-end" title={
+              <div className='flex flex-col gap-3 px-2 py-2'>
+                <div>
+                  <span>How it works:</span>
+                  <ul class="list-disc list-inside">
+                    <li>a</li>
+                  </ul>
+                </div>
+                <div>
+                  <span>How it works:</span>
+                  <ul class="list-disc list-inside">
+                    <li>a</li>
+                  </ul>
+                </div>
+              </div>
+            }>
+              <IconButton>
+                <InfoOutlinedIcon className='text-primary' />
+              </IconButton>
+            </Tooltip>
           </div>
           <div className='flex items-center justify-center'>
             <RadioGroup
-              aria-labelledby="transaction-radio-group"
+              aria-labelledby="radio-group"
               defaultValue="encrypt"
-              name="transaction-radio-group"
+              name="radio-group"
               row
-              value={transaction}
-              onChange={(e) => { setTransaction(e.target.value) }} >
-              <FormControlLabel value="encrypt" control={<Radio />} label="Encrypt" />
-              <FormControlLabel value="decrypt" control={<Radio />} label="Decrypt" />
+              value={encrypting}
+              onChange={(e) => { setEncrypting(!encrypting) }} >
+              <FormControlLabel value={true} control={<Radio />} label="Encrypt" />
+              <FormControlLabel value={false} control={<Radio />} label="Decrypt" />
             </RadioGroup>
           </div>
-          <div className='flex flex-col items-center justify-center'>
-            <span className='text-primary font-bold'>Seed Size:</span>
-            <Select
-              sx={{ m: 1, minWidth: 120 }} size="small"
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={seedSize}
-              label="Seed Size"
-              onChange={(e) => { setSeedSize(e.target.value) }}
-            >
-              <MenuItem value={12}>12</MenuItem>
-              <MenuItem value={18}>18</MenuItem>
-              <MenuItem value={24}>24</MenuItem>
-            </Select>
-          </div>
-          <Divider orientation="horizontal" flexItem />
-          <div className='flex items-center justify-center text-primary font-bold'>
-            <span>Word List:</span>
-          </div>
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-5'>
-            {words.map((word, index) => (
-              <TextField key={index} id={"input" + index} variant="standard" value={word} onChange={(e) => setWords(prev => {
-                let copy = [...prev]
-                copy[index] = e.target.value
-                return copy;
-              })} />
-            ))}
-          </div>
+          {encrypting ?
+            <div>
+              <div className='flex flex-col items-center justify-center mb-5'>
+                <span className='text-primary font-bold'>Seed Size:</span>
+                <Select
+                  sx={{ m: 1, minWidth: 120 }} size="small"
+                  labelId="select-label"
+                  id="simple-select"
+                  value={seedSize}
+                  label="Seed Size"
+                  onChange={(e) => { setSeedSize(e.target.value) }}
+                >
+                  <MenuItem value={12}>12</MenuItem>
+                  <MenuItem value={18}>18</MenuItem>
+                  <MenuItem value={24}>24</MenuItem>
+                </Select>
+              </div>
+              <Divider orientation="horizontal" flexItem />
+              <div className='flex items-center justify-center text-primary font-bold mt-5'>
+                <span>Word List:</span>
+              </div>
+              <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-5'>
+                {words.map((word, index) => (
+                  <TextField key={index} id={"input" + index} variant="standard" value={word} onChange={(e) => setWords(prev => {
+                    let copy = [...prev]
+                    copy[index] = e.target.value
+                    return copy;
+                  })} />
+                ))}
+              </div>
+            </div>
+            :
+            <div className='w-full'>
+              <div className='flex w-full items-center justify-center'>
+                <TextField
+                  className='w-full px-5'
+                  id="multiline-flexible"
+                  label="Enter the Encrypted Text"
+                  multiline
+                  value={phrase}
+                  onChange={(e) => { setPhrase(e.target.value) }}
+                  maxRows={6}
+                  variant="standard"
+                />
+              </div>
+            </div>
+          }
+
           <Divider orientation="horizontal" flexItem />
           <div className='flex items-center justify-center text-primary font-bold'>
             <span>Passwords:</span>
@@ -125,39 +188,43 @@ function App() {
           <div className='flex items-center justify-center gap-5'>
             <div className='flex flex-col items-start'>
               <span className='text-primary text-sm'>First Password:</span>
-              <Input
-                id="password1"
-                type={showPassword ? 'text' : 'password'}
-                onChange={(e) => { setPassword(e.target.value) }}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
+              <FormControl>
+                <Input
+                  id="password1"
+                  type={showPassword ? 'text' : 'password'}
+                  onChange={(e) => { setPassword(e.target.value) }}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
             </div>
             <div className='flex flex-col items-start'>
               <span className='text-primary text-sm'>Confirmation:</span>
-              <Input
-                onChange={(e) => { setPassword2(e.target.value) }}
-                id="password2"
-                type={showPassword2 ? 'text' : 'password'}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPassword2(!showPassword2)}
-                    >
-                      {showPassword2 ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
+              <FormControl>
+                <Input
+                  onChange={(e) => { setPassword2(e.target.value) }}
+                  id="password2"
+                  type={showPassword2 ? 'text' : 'password'}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowPassword2(!showPassword2)}
+                      >
+                        {showPassword2 ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
             </div>
           </div>
           <div className='flex flex-col gap-[2px] text-xs items-start self-start ml-4'>
@@ -170,39 +237,43 @@ function App() {
           <div className='flex items-center justify-center gap-5'>
             <div className='flex flex-col items-start'>
               <span className='text-primary text-sm'>Second Password:</span>
-              <Input
-                id="password3"
-                type={showPassword3 ? 'text' : 'password'}
-                onChange={(e) => { setPassword3(e.target.value) }}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPassword3(!showPassword3)}
-                    >
-                      {showPassword3 ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
+              <FormControl>
+                <Input
+                  id="password3"
+                  type={showPassword3 ? 'text' : 'password'}
+                  onChange={(e) => { setPassword3(e.target.value) }}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowPassword3(!showPassword3)}
+                      >
+                        {showPassword3 ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
             </div>
             <div className='flex flex-col items-start'>
               <span className='text-primary text-sm'>Confirmation:</span>
-              <Input
-                id="password4"
-                type={showPassword4 ? 'text' : 'password'}
-                onChange={(e) => { setPassword4(e.target.value) }}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPassword4(!showPassword4)}
-                    >
-                      {showPassword4 ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
+              <FormControl>
+                <Input
+                  id="password4"
+                  type={showPassword4 ? 'text' : 'password'}
+                  onChange={(e) => { setPassword4(e.target.value) }}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowPassword4(!showPassword4)}
+                      >
+                        {showPassword4 ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
             </div>
           </div>
           <div className='flex flex-col gap-[2px] text-xs items-start self-start ml-4'>
@@ -213,10 +284,21 @@ function App() {
             <span className={(password3.match(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/) ? "text-greenright" : "text-redwarning")}>Password must have at least one special character.</span>
           </div>
           <div className='mt-10'>
-            <Button onClick={() => {
-              setEncryptedText(encrypt(wordsToString(), password, password3))
-              setOpenModal(true)
-            }} variant="contained">{transaction}</Button>
+            {encrypting ?
+              <Button onClick={() => {
+                setEncryptedText(encrypt(wordsToString(), password, password3))
+                setOpenModal(true)
+              }} variant="contained">
+                Encrypt
+              </Button>
+              :
+              <Button onClick={() => {
+                setOpenModal(true)
+                setDecryptedText(decrypt(phrase, password, password3))
+              }} variant="contained">
+                Decrypt
+              </Button>
+            }
           </div>
         </div>
       </FormControl>
