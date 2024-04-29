@@ -129,7 +129,7 @@ function App() {
                   <span className='font-bold text-base'>How it works:</span>
                   <ul class="list-disc list-inside text-justify">
                     <li>ALL transactions are running locally, which means that ALL information needed to encrypt or decrypt isn't being sent to any server or external resources.</li>
-                    <li>After the page is fully loaded, you can even run it disconnected from the internet to ensure that the data isn't being sent anywhere.</li>
+                    <li>After the page is fully loaded, you can even run it disconnected from the internet to ensure that the data isn't being sent anywhere and you can download de PWA to your smartphone.</li>
                     <li>It's open source. You can view the code or even make a copy to ensure you can decrypt anytime you want.</li>
                     <li>It uses the AES algorithm to encrypt the data, which means it's very secure and extremely difficult to break. It's almost immune to conventional attacks.</li>
                   </ul>
