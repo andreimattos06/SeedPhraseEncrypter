@@ -5,6 +5,7 @@ import { Dialog, Divider, FormControl, FormControlLabel, IconButton, Input, Inpu
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 function App() {
   const [seedSize, setSeedSize] = useState(12);
@@ -96,7 +97,6 @@ function App() {
           }
           <div className='flex flex-col'>
             <span className='text-primary font-bold'>Notes:</span>
-
             {encrypting ?
               <ul class="list-disc list-inside marker:text-primary">
                 <li>a</li>
@@ -105,8 +105,6 @@ function App() {
               :
               <></>
             }
-
-
           </div>
         </div>
       </Dialog >
@@ -121,8 +119,11 @@ function App() {
       <FormControl className='w-full flex items-center'>
         <div className='bg-white flex flex-col gap-5 w-5/6 sm:w-4/6 md:w-7/12 lg:w-2/4 xl:w-5/12 2xl:w-4/12 items-center justify-center border-[1px] my-16 border-primary py-8 px-5 rounded-3xl'>
           <div className='flex items-center justify-center text-primary font-bold gap-1'>
+            <IconButton aria-label="github" href="https://github.com/andreimattos06/SeedPhraseEncrypter" target="_blank">
+              <GitHubIcon className='text-primary'/>
+            </IconButton>
             <span>Seed Phrase Encrypter</span>
-            <Tooltip className='animate-bounce' placement="left-end" arrow title={
+            <Tooltip disableFocusListener className='animate-bounce' placement="left-end" arrow title={
               <div className='flex flex-col gap-3 px-2 py-2'>
                 <div>
                   <span className='font-bold text-base'>How it works:</span>
@@ -321,31 +322,29 @@ function App() {
           </div>
           <div className='mt-10'>
             {encrypting ?
-              <Button 
-              onClick={() => {
-                setEncryptedText(encrypt(wordsToString(), password, password3))
-                setOpenModal(true)                
-              }} 
-              variant="contained"
-              disabled={!passwordCriterias}>
+              <Button
+                onClick={() => {
+                  setEncryptedText(encrypt(wordsToString(), password, password3))
+                  setOpenModal(true)
+                }}
+                variant="contained"
+                disabled={!passwordCriterias}>
                 Encrypt
               </Button>
               :
-              <Button 
-              onClick={() => {
-                setOpenModal(true)
-                setDecryptedText(decrypt(phrase, password, password3))
-              }} 
-              variant="contained"
-              disabled={!passwordCriterias}>
+              <Button
+                onClick={() => {
+                  setOpenModal(true)
+                  setDecryptedText(decrypt(phrase, password, password3))
+                }}
+                variant="contained"
+                disabled={!passwordCriterias}>
                 Decrypt
               </Button>
             }
           </div>
         </div>
       </FormControl>
-      <div className=''>
-      </div>
     </>
   )
 }
