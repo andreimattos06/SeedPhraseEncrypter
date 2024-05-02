@@ -52,6 +52,11 @@ function App() {
   useEffect(() => {
     setWords(Array.from({ length: seedSize }, () => ""))
     setPhrase("")
+    setPassword("")
+    setPassword2("")
+    setPassword3("")
+    setPassword4("")
+    console.log("aaaaa")
   }, [seedSize, encrypting])
 
   useEffect(() => {
@@ -86,7 +91,7 @@ function App() {
           </div>
           {encrypting ?
             <div className='flex items-center justify-center border-2 border-primary rounded-md'>
-              <p className='break-all px-2 py-1 border-r-2 border-primary' id="encryptedtext">{encryptedText}</p>
+              <p className='break-all px-2 py-1 border-r-2 border-primary text-sm' id="encryptedtext">{encryptedText}</p>
               <button className='text-primary rounded-lg m-2 p-1 hover:bg-primary hover:text-white' onClick={() => { navigator.clipboard.writeText(encryptedText); setOpenCopySnack(true) }}><ContentCopyIcon />
               </button>
             </div>
@@ -95,17 +100,39 @@ function App() {
               <p className='px-2 py-1 border-primary' id="encryptedtext">{decryptedText}.</p>
             </div>
           }
-          <div className='flex flex-col'>
-            <span className='text-primary font-bold'>Notes:</span>
-            {encrypting ?
-              <ul class="list-disc list-inside marker:text-primary">
-                <li>a</li>
-                <li>a</li>
+          {encrypting ?
+            <div className='flex flex-col items-center justify-center text-primary font-bold text-sm gap-5'>
+              <div className='flex items-center justify-center gap-2 text-center'>
+                <span>💻</span>
+                <span> Based on the length of your passwords, there are 188<sup>{(password.length + password3.length)}</sup> different possibilities.</span>
+                <span>💻</span>
+              </div>
+
+              <div className='flex items-center justify-center gap-2 text-center'>
+                <span>🤓 </span>
+                <span> A hypothetical quantum computer capable of processing 10<sup>12</sup> operations per second would require at least 71,777,084 years to brute-force break both passwords!</span>
+                <span>🤓 </span>
+              </div>
+
+            </div>
+            :
+            <></>
+          }
+          {encrypting ?
+            <div className='flex flex-col'>
+              <span className='text-primary font-bold'>Notes:</span>
+
+              <ul class="list-disc list-inside marker:text-primary text-sm">
+                <li>Use this encrypted text as a BACKUP for the original seed phrase.</li>
+                <li>Do not share the encrypted text or the password with anyone.</li>
+                <li>In case of a possible password leak, consider creating a new wallet with a new seed phrase.</li>
+                <li>You can clone the git repository to run the application whenever you want.</li>
               </ul>
-              :
-              <></>
-            }
-          </div>
+            </div>
+            :
+            <></>
+          }
+
         </div>
       </Dialog >
 
@@ -120,38 +147,40 @@ function App() {
         <div className='bg-white flex flex-col gap-5 w-5/6 sm:w-4/6 md:w-7/12 lg:w-2/4 xl:w-5/12 2xl:w-4/12 items-center justify-center border-[1px] my-16 border-primary py-8 px-5 rounded-3xl'>
           <div className='flex items-center justify-center text-primary font-bold gap-1'>
             <IconButton aria-label="github" href="https://github.com/andreimattos06/SeedPhraseEncrypter" target="_blank">
-              <GitHubIcon className='text-primary'/>
+              <GitHubIcon className='text-primary' />
             </IconButton>
             <span>Seed Phrase Encrypter</span>
-            <Tooltip disableFocusListener className='animate-bounce' placement="left-end" arrow title={
-              <div className='flex flex-col gap-3 px-2 py-2'>
-                <div>
-                  <span className='font-bold text-base'>How it works:</span>
-                  <ul class="list-disc list-inside text-justify">
-                    <li>ALL transactions are running locally, which means that ALL information needed to encrypt or decrypt isn't being sent to any server or external resources.</li>
-                    <li>After the page is fully loaded, you can even run it disconnected from the internet to ensure that the data isn't being sent anywhere and you can download de PWA to your smartphone.</li>
-                    <li>It's open source. You can view the code or even make a copy to ensure you can decrypt anytime you want.</li>
-                    <li>It uses the AES algorithm to encrypt the data, which means it's very secure and extremely difficult to break. It's almost immune to conventional attacks.</li>
-                  </ul>
+            <Tooltip disableFocusListener className='animate-bounce' placement="bottom-end"
+              enterTouchDelay={1}
+              arrow title={
+                <div className='flex flex-col gap-3 px-2 py-2'>
+                  <div>
+                    <span className='font-bold text-base'>How it works:</span>
+                    <ul class="list-disc list-inside text-justify">
+                      <li>ALL transactions are running locally, which means that ALL information needed to encrypt or decrypt isn't being sent to any server or external resources.</li>
+                      <li>After the page is fully loaded, you can even run it disconnected from the internet to ensure that the data isn't being sent anywhere and you can download de PWA to your smartphone.</li>
+                      <li>It's open source. You can view the code or even make a copy to ensure you can decrypt anytime you want.</li>
+                      <li>It uses the AES algorithm to encrypt the data, which means it's very secure and extremely difficult to break. It's almost immune to conventional attacks.</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <span className='font-bold text-base'>How to use:</span>
+                    <ol class="list-decimal list-inside">
+                      <li>Select the type of transaction you want: encrypt or decrypt.</li>
+                      <li>Fill in the information.</li>
+                      <li>Fill in the password fields, paying attention to the prerequisites. It requires two passwords for security reasons.</li>
+                    </ol>
+                  </div>
+                  <div>
+                    <span className='font-bold text-base'>Security Hints:</span>
+                    <ol class="list-disc list-inside">
+                      <li>Open the page in incognito mode to ensure that unauthorized software or plugins do not access the inputted data.</li>
+                      <li>Make sure your computer is free of viruses and/or malicious software.</li>
+                      <li>The longer the password, number of numbers and special characters, the more secure the password will be.</li>
+                    </ol>
+                  </div>
                 </div>
-                <div>
-                  <span className='font-bold text-base'>How to use:</span>
-                  <ol class="list-decimal list-inside">
-                    <li>Select the type of transaction you want: encrypt or decrypt.</li>
-                    <li>Fill in the information.</li>
-                    <li>Fill in the password fields, paying attention to the prerequisites. It requires two passwords for security reasons.</li>
-                  </ol>
-                </div>
-                <div>
-                  <span className='font-bold text-base'>Security Hints:</span>
-                  <ol class="list-disc list-inside">
-                    <li>Open the page in incognito mode to ensure that unauthorized software or plugins do not access the inputted data.</li>
-                    <li>Make sure your computer is free of viruses and/or malicious software.</li>
-                    <li>The longer the password, number of numbers and special characters, the more secure the password will be.</li>
-                  </ol>
-                </div>
-              </div>
-            }>
+              }>
               <IconButton>
                 <InfoOutlinedIcon className='text-primary' />
               </IconButton>
@@ -226,6 +255,7 @@ function App() {
               <span className='text-primary text-sm'>First Password:</span>
               <FormControl>
                 <Input
+                  value={password}
                   id="password1"
                   type={showPassword ? 'text' : 'password'}
                   onChange={(e) => { setPassword(e.target.value) }}
@@ -246,6 +276,7 @@ function App() {
               <span className='text-primary text-sm'>Confirmation:</span>
               <FormControl>
                 <Input
+                  value={password2}
                   onChange={(e) => { setPassword2(e.target.value) }}
                   id="password2"
                   type={showPassword2 ? 'text' : 'password'}
@@ -275,6 +306,7 @@ function App() {
               <span className='text-primary text-sm'>Second Password:</span>
               <FormControl>
                 <Input
+                  value={password3}
                   id="password3"
                   type={showPassword3 ? 'text' : 'password'}
                   onChange={(e) => { setPassword3(e.target.value) }}
@@ -295,6 +327,7 @@ function App() {
               <span className='text-primary text-sm'>Confirmation:</span>
               <FormControl>
                 <Input
+                  value={password4}
                   id="password4"
                   type={showPassword4 ? 'text' : 'password'}
                   onChange={(e) => { setPassword4(e.target.value) }}
