@@ -56,7 +56,6 @@ function App() {
     setPassword2("")
     setPassword3("")
     setPassword4("")
-    console.log("aaaaa")
   }, [seedSize, encrypting])
 
   useEffect(() => {
