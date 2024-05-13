@@ -6,7 +6,6 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import { Analytics } from "@vercel/analytics/react"
 
 function App() {
   const [seedSize, setSeedSize] = useState(12);
@@ -378,7 +377,6 @@ function App() {
           </div>
         </div>
       </FormControl>
-      <Analytics/>
     </>
   )
 }
